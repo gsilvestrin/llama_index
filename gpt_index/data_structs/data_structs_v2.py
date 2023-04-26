@@ -351,6 +351,7 @@ class LanceDBIndexDict(IndexDict):
         """Get type."""
         return IndexStructType.LANCEDB
 
+
 @dataclass
 class MilvusIndexDict(IndexDict):
     """Index dict for Milvus vector index."""

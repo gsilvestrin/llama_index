@@ -352,6 +352,7 @@ class GPTQdrantIndex(GPTVectorStoreIndex):
             **kwargs,
         )
 
+
 class GPTLanceDBIndex(GPTVectorStoreIndex):
     """GPT LanceDB Index.
 
@@ -375,6 +376,7 @@ class GPTLanceDBIndex(GPTVectorStoreIndex):
         GPTLanceDBIndex: VectorStore that supports creating LanceDB datasets and querying it.
 
     """
+
     index_struct_cls: Type[IndexDict] = LanceDBIndexDict
 
     def __init__(
@@ -399,7 +401,7 @@ class GPTLanceDBIndex(GPTVectorStoreIndex):
                 table_name=table_name,
                 id_column_name=id_column_name,
                 nprobes=nprobes,
-                refine_factor=refine_factor
+                refine_factor=refine_factor,
             )
         assert vector_store is not None
 
@@ -410,6 +412,7 @@ class GPTLanceDBIndex(GPTVectorStoreIndex):
             vector_store=vector_store,
             **kwargs,
         )
+
 
 class GPTMilvusIndex(GPTVectorStoreIndex):
     """GPT Milvus Index.

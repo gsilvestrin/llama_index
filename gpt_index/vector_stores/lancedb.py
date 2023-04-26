@@ -32,6 +32,7 @@ class LanceDBVectorStore(VectorStore):
     Returns:
         LanceDBVectorStore: VectorStore that supports creating LanceDB datasets and querying it.
     """
+
     stores_text = True
 
     def __init__(
@@ -43,9 +44,7 @@ class LanceDBVectorStore(VectorStore):
         **kwargs: Any,
     ) -> None:
         """Init params."""
-        import_err_msg = (
-            "`lancedb` package not found, please run `pip install lancedb`"
-        )
+        import_err_msg = "`lancedb` package not found, please run `pip install lancedb`"
         try:
             import lancedb  # noqa: F401
         except ImportError:
@@ -72,18 +71,20 @@ class LanceDBVectorStore(VectorStore):
         }
 
     def add(
-            self,
-            embedding_results: List[NodeEmbeddingResult],
+        self,
+        embedding_results: List[NodeEmbeddingResult],
     ) -> List[str]:
         data = []
         ids = []
         for result in embedding_results:
-            data.append({
-                "id": result.id,
-                "doc_id": result.doc_id,
-                "vector": result.embedding,
-                "text": result.node.get_text(),
-            })
+            data.append(
+                {
+                    "id": result.id,
+                    "doc_id": result.doc_id,
+                    "vector": result.embedding,
+                    "text": result.node.get_text(),
+                }
+            )
             ids.append(result.id)
 
         if self.table_name in self.connection.table_names():
@@ -94,13 +95,15 @@ class LanceDBVectorStore(VectorStore):
         return ids
 
     def query(
-            self,
-            query: VectorStoreQuery,
+        self,
+        query: VectorStoreQuery,
     ) -> VectorStoreQueryResult:
         table = self.connection.open_table(self.table_name)
-        query = table.search(query.query_embedding) \
-            .limit(query.similarity_top_k) \
+        query = (
+            table.search(query.query_embedding)
+            .limit(query.similarity_top_k)
             .nprobes(self.nprobes)
+        )
 
         if self.refine_factor is not None:
             query.refine_factor(self.refine_factor)
@@ -113,8 +116,12 @@ class LanceDBVectorStore(VectorStore):
                 text=item.text,
                 relationships={
                     DocumentRelationship.SOURCE: item.doc_id,
-                }
+                },
             )
             nodes.append(node)
 
-        return VectorStoreQueryResult(nodes=nodes, similarities=results["score"].tolist(), ids=results["id"].tolist())
+        return VectorStoreQueryResult(
+            nodes=nodes,
+            similarities=results["score"].tolist(),
+            ids=results["id"].tolist(),
+        )
