@@ -86,8 +86,8 @@ class LanceDBVectorStore(VectorStore):
             })
             ids.append(result.id)
 
-        if "vectors" in self.connection.table_names():
-            tbl = self.connection.open_table("vectors")
+        if self.table_name in self.connection.table_names():
+            tbl = self.connection.open_table(self.table_name)
             tbl.add(data)
         else:
             self.connection.create_table(self.table_name, data)

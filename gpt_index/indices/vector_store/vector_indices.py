@@ -383,7 +383,7 @@ class GPTLanceDBIndex(GPTVectorStoreIndex):
         uri: Optional[str] = None,
         table_name: str = "vectors",
         id_column_name: str = "id",
-        nprobes: int = 10,
+        nprobes: int = 20,
         refine_factor: Optional[int] = None,
         service_context: Optional[ServiceContext] = None,
         index_struct: Optional[IndexDict] = None,
