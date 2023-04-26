@@ -61,6 +61,11 @@ class LanceDBVectorStore(VectorStore):
         return cls(**config_dict)
 
     @property
+    def client(self) -> None:
+        """Get client."""
+        return None
+
+    @property
     def config_dict(self) -> dict:
         """Return config dict."""
         return {
@@ -94,21 +99,31 @@ class LanceDBVectorStore(VectorStore):
             self.connection.create_table(self.table_name, data)
         return ids
 
+    def delete(self, doc_id: str, **delete_kwargs: Any) -> None:
+        """Delete a document.
+
+        Args:
+            doc_id (str): document id
+
+        """
+        raise NotImplementedError("Delete not yet implemented for Faiss index.")
+
     def query(
         self,
         query: VectorStoreQuery,
     ) -> VectorStoreQueryResult:
+        """Query index for top k most similar nodes."""
         table = self.connection.open_table(self.table_name)
-        query = (
+        lance_query = (
             table.search(query.query_embedding)
             .limit(query.similarity_top_k)
             .nprobes(self.nprobes)
         )
 
         if self.refine_factor is not None:
-            query.refine_factor(self.refine_factor)
+            lance_query.refine_factor(self.refine_factor)
 
-        results = query.to_df()
+        results = lance_query.to_df()
         nodes = []
         for _, item in results.iterrows():
             node = Node(
