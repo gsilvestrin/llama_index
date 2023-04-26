@@ -343,6 +343,15 @@ class QdrantIndexDict(IndexDict):
 
 
 @dataclass
+class LanceDBIndexDict(IndexDict):
+    """Index dict for LanceDB vector index."""
+
+    @classmethod
+    def get_type(cls) -> IndexStructType:
+        """Get type."""
+        return IndexStructType.LANCEDB
+
+@dataclass
 class MilvusIndexDict(IndexDict):
     """Index dict for Milvus vector index."""
 

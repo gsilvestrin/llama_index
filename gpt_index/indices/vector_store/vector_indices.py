@@ -9,6 +9,7 @@ from gpt_index.data_structs.data_structs_v2 import (
     ChromaIndexDict,
     FaissIndexDict,
     IndexDict,
+    LanceDBIndexDict,
     MilvusIndexDict,
     OpensearchIndexDict,
     PineconeIndexDict,
@@ -24,6 +25,7 @@ from gpt_index.vector_stores import (
     ChatGPTRetrievalPluginClient,
     ChromaVectorStore,
     FaissVectorStore,
+    LanceDBVectorStore,
     MilvusVectorStore,
     PineconeVectorStore,
     QdrantVectorStore,
@@ -350,6 +352,42 @@ class GPTQdrantIndex(GPTVectorStoreIndex):
             **kwargs,
         )
 
+class GPTLanceDBIndex(GPTVectorStoreIndex):
+    index_struct_cls: Type[IndexDict] = LanceDBIndexDict
+
+    def __init__(
+        self,
+        nodes: Optional[Sequence[Node]] = None,
+        uri: Optional[str] = None,
+        table_name: str = "vectors",
+        id_column_name: str = "id",
+        nprobes: int = 10,
+        refine_factor: Optional[int] = None,
+        service_context: Optional[ServiceContext] = None,
+        index_struct: Optional[IndexDict] = None,
+        vector_store: Optional[LanceDBVectorStore] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Init params."""
+        if vector_store is None:
+            if uri is None:
+                raise ValueError("uri is required.")
+            vector_store = LanceDBVectorStore(
+                uri=uri,
+                table_name=table_name,
+                id_column_name=id_column_name,
+                nprobes=nprobes,
+                refine_factor=refine_factor
+            )
+        assert vector_store is not None
+
+        super().__init__(
+            nodes=nodes,
+            index_struct=index_struct,
+            service_context=service_context,
+            vector_store=vector_store,
+            **kwargs,
+        )
 
 class GPTMilvusIndex(GPTVectorStoreIndex):
     """GPT Milvus Index.

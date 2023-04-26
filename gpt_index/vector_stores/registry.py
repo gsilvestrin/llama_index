@@ -5,6 +5,7 @@ from gpt_index.constants import DATA_KEY, TYPE_KEY
 from gpt_index.vector_stores.chatgpt_plugin import ChatGPTRetrievalPluginClient
 from gpt_index.vector_stores.chroma import ChromaVectorStore
 from gpt_index.vector_stores.faiss import FaissVectorStore
+from gpt_index.vector_stores.lancedb import LanceDBVectorStore
 from gpt_index.vector_stores.milvus import MilvusVectorStore
 from gpt_index.vector_stores.opensearch import OpensearchVectorStore
 from gpt_index.vector_stores.pinecone import PineconeVectorStore
@@ -23,6 +24,7 @@ class VectorStoreType(str, Enum):
     FAISS = "faiss"
     CHROMA = "chroma"
     CHATGPT_PLUGIN = "chatgpt_plugin"
+    LANCEDB = "lancedb"
     MILVUS = "milvus"
 
 
@@ -30,6 +32,7 @@ VECTOR_STORE_TYPE_TO_VECTOR_STORE_CLASS: Dict[VectorStoreType, Type[VectorStore]
     VectorStoreType.SIMPLE: SimpleVectorStore,
     VectorStoreType.WEAVIATE: WeaviateVectorStore,
     VectorStoreType.QDRANT: QdrantVectorStore,
+    VectorStoreType.LANCEDB: LanceDBVectorStore,
     VectorStoreType.MILVUS: MilvusVectorStore,
     VectorStoreType.PINECONE: PineconeVectorStore,
     VectorStoreType.OPENSEARCH: OpensearchVectorStore,
