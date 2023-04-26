@@ -353,6 +353,28 @@ class GPTQdrantIndex(GPTVectorStoreIndex):
         )
 
 class GPTLanceDBIndex(GPTVectorStoreIndex):
+    """GPT LanceDB Index.
+
+    Stores text and embeddings in LanceDB. The vector store will open an existing LanceDB dataset or create
+    the dataset if it does not exist.
+
+    Args:
+        uri (str, required): Location where LanceDB will store its files.
+        table_name (str, optional): The table name where the embeddings will be stored. Defaults to "vectors".
+        nprobes (int, optional): The number of probes used. A higher number makes search more accurate but also slower.
+            Defaults to 20.
+        refine_factor: (int, optional): Refine the results by reading extra elements and re-ranking them in memory.
+            Defaults to None
+        service_context (ServiceContext): Service context container (contains
+            components like LLMPredictor, PromptHelper, etc.).
+
+    Raises:
+        ImportError: Unable to import `lancedb`.
+
+    Returns:
+        GPTLanceDBIndex: VectorStore that supports creating LanceDB datasets and querying it.
+
+    """
     index_struct_cls: Type[IndexDict] = LanceDBIndexDict
 
     def __init__(
